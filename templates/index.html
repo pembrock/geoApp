@@ -1,0 +1,42 @@
+{% include 'top.html' %}
+        <input class = "ip" type="hidden" value='{{ data.ip }}' />
+        <input class ="browser" type="hidden" value='{{ data.browser }}' />
+        <input class ="os" type="hidden" value='{{ data.os }}' />
+
+        <div class="geo">Initializing...</div>
+<script>
+    if(geo_position_js.init()){//получаем координаты местонахождения
+        geo_position_js.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
+    }
+    else{
+        alert("Functionality not available");
+    }
+
+    function success_callback(p)
+    {
+        lat = p.coords.latitude.toFixed(2);
+        lon = p.coords.longitude.toFixed(2);
+        ip = $('.ip').val();
+        browser = $('.browser').val();
+        os = $('.os').val();
+        screen_size = screen.width + "x" + screen.height;
+        //height = screen.height;
+        $.ajax({
+            type: "POST",
+            url: location.href,
+            data: {addInfo: 1, ip: ip, browser: browser, os: os, screen: screen_size, lat: lat, lon: lon},
+            success: function(e){
+                if (e == "ok")
+                    $('.geo').html('<p>Данные сохранены</p><a href="/list/">Список</a> ');
+            }
+
+        });
+    }
+
+    function error_callback(p)
+    {
+        alert('error='+p.code);
+    }
+
+</script>
+{% include 'bottom.html' %}

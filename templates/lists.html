@@ -1,0 +1,23 @@
+{% include 'top.html' %}
+<div class="welcome">
+    <p>Список</p>
+</div>
+        <table border="1">
+            <tr>
+                <th>IP-адрес</th>
+                <th>Операционная система</th>
+                <th>Браузер</th>
+                <th>Разрешение экрана</th>
+            </tr>
+{% for value in data.objects %}
+<tr>
+    <td><a href="/list/?id={{ value.ID }}">{{ value.IP }}</a></td>
+    <td>{{ value.OS }}</td>
+    <td>{{ value.Browser }}</td>
+    <td>{{ value.Screen }}</td>
+</tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+{% include 'bottom.html' %}

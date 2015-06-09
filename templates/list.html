@@ -1,0 +1,50 @@
+{% include 'top.html' %}
+<div class="welcome">
+    <p><b>Подробная информация</b></p>
+</div>
+
+        {% for value in data.objects %}
+            <p><b>IP-адрес:</b> {{ value.IP }}</p>
+            <p><b>Операционная система:</b> {{ value.OS }}</p>
+            <p><b>Версия браузера:</b> {{ value.Browser }}</p>
+            <p><b>Разрешение экрана:</b> {{ value.Screen }}</p>
+            <p><b>Положение на карте:</b></p>
+            <div id="map" style="width: 50%; height: 400px; border: 1px solid black;"></div>
+
+
+
+<script type="text/javascript">
+    var myMap;
+
+    // Дождёмся загрузки API и готовности DOM.
+    ymaps.ready(init);
+
+    function init () {
+        // Создание экземпляра карты и его привязка к контейнеру с
+        // заданным id ("map").
+        myMap = new ymaps.Map('map', {
+            // При инициализации карты обязательно нужно указать
+            // её центр и коэффициент масштабирования.
+            center: [{{ value.Lat_coords }}, {{ value.Lon_coords }}], // Москва
+            zoom: 15
+        });
+// Создаем геообъект с типом геометрии "Точка".
+        myGeoObject = new ymaps.GeoObject({
+            // Опции.
+            // Иконка метки будет растягиваться под размер ее содержимого.
+            preset: 'islands#blackStretchyIcon',
+            // Метку можно перемещать.
+            draggable: true
+        });
+        myMap.geoObjects
+                .add(myGeoObject)
+                .add(new ymaps.Placemark([{{ value.Lat_coords  }}, {{ value.Lon_coords }}],{
+                    preset: 'islands#circleDotIcon',
+                    iconColor: '#1faee9'
+                }));
+
+    }
+</script>
+{% endfor %}
+        <p><a href="/list/">Назад</a></p>
+{% include 'bottom.html' %}
